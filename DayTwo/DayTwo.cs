@@ -41,6 +41,124 @@ namespace AdventOfCode2023.DayTwo
 
         private void FurtherParsing()
         {
+            var parsedInput = new ParsedInput();
+
+            foreach (var game in Input)
+            {
+                var parsedGame = new Game { Id = int.Parse(Regex.Match(game, @"(\d+)").Value) };
+                var parsedSets = game.Split(new char[] { ';', ':' }).Skip(1);
+
+
+                foreach (var set in parsedSets)
+                {
+                    var parsedSet = new Set();
+
+                    var matches = Regex.Matches(set, @"(\d+)\s+(\w+)");
+
+                    int red = 0;
+                    int green = 0;
+                    int blue = 0;
+
+                    foreach (Match setMatch in matches)
+                    {
+                        string count = setMatch.Groups[1].Value;
+                        string color = setMatch.Groups[2].Value;
+
+                        switch (color)
+                        {
+                            case "red":
+                                red = int.Parse(count);
+                                break;
+                            case "green":
+                                green = int.Parse(count);
+                                break;
+                            case "blue":
+                                blue = int.Parse(count);
+                                break;
+                        }
+                    }
+
+                    parsedSet.RGBValues = new List<int> { red, green, blue };
+
+                    parsedGame.Sets.Add(parsedSet);
+                }
+
+                parsedInput.Games.Add(parsedGame);
+            }
+
+            ParsedInput = parsedInput;
+        }
+
+        public int GetPartOneResult()
+        {
+            var counter = 0;
+
+            var maxRed = 12;
+            var maxGreen = 13;
+            var maxBlue = 14;
+
+            foreach (var game in ParsedInput.Games)
+            {
+                bool isGamePossible = true;
+
+                foreach (var set in game.Sets)
+                {
+                    if (set.RGBValues[0] > maxRed || set.RGBValues[1] > maxGreen || set.RGBValues[2] > maxBlue)
+                    {
+                        isGamePossible = false;
+                    }
+
+                    if (!isGamePossible)
+                    {
+                        break;
+                    }
+                }
+
+                if (isGamePossible)
+                {
+                    counter += game.Id;
+                }
+            }
+
+            return counter;
+        }
+
+        public int GetPartTwoResult()
+        {
+            var counter = 0;
+
+            foreach (var game in ParsedInput.Games)
+            {
+                var minRed = 0;
+                var minGreen = 0;
+                var minBlue = 0;
+
+                foreach (var set in game.Sets)
+                {
+                    if (set.RGBValues[0] > minRed)
+                    {
+                        minRed = set.RGBValues[0];
+                    }
+                    if (set.RGBValues[1] > minGreen)
+                    {
+                        minGreen = set.RGBValues[1];
+                    }
+                    if (set.RGBValues[2] > minBlue)
+                    {
+                        minBlue = set.RGBValues[2];
+                    }
+                }
+
+                var power = minRed * minGreen * minBlue;
+
+                counter += power;
+            }
+
+            return counter;
+        }
+
+        public void BetterFurtherParsing()
+        {
             ParsedInput = new ParsedInput
             {
                 Games = Input.Select(game =>
@@ -74,14 +192,14 @@ namespace AdventOfCode2023.DayTwo
             };
         }
 
-        public int GetPartOneResult()
+        public int BetterGetPartOneResult()
         {
             return ParsedInput.Games
                 .Where(game => game.Sets.All(set => set.RGBValues[0] <= 12 && set.RGBValues[1] <= 13 && set.RGBValues[2] <= 14))
                 .Sum(game => game.Id);
         }
 
-        public int GetPartTwoResult()
+        public int BetterGetPartTwoResult()
         {
             return ParsedInput.Games
                 .Select(game => game.Sets.Aggregate((R: 0, G: 0, B: 0), (acc, set) =>
