@@ -42,7 +42,7 @@
                     .Replace("five", "f5ve")
                     .Replace("six", "s6x")
                     .Replace("seven", "sev7n")
-                    .Replace("eight", "eig8t")
+                    .Replace("eight", "ei8ht")
                     .Replace("nine", "n9ne");
 
                 var firstNumber = convertedLine.First(char.IsDigit);

@@ -10,5 +10,5 @@ Console.WriteLine();
 DayTwo dayTwo = new DayTwo();
 
 Console.WriteLine("Day Two P1: " + dayTwo.GetPartOneResult());
-//Console.WriteLine("Day Two P2: " + dayTwo.GetPartTwoResult());
-//Console.WriteLine();
+Console.WriteLine("Day Two P2: " + dayTwo.GetPartTwoResult());
+Console.WriteLine();
